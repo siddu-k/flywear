@@ -109,6 +109,7 @@ h4,
     max-width: 1600px;
     margin: 0 auto;
     padding: 0 4%;
+    gap: 1rem;
 }
 
 .logo {
@@ -139,6 +140,16 @@ h4,
 
     .mobile-menu-btn {
         display: none;
+    }
+}
+
+@media (max-width: 899px) {
+    .nav-actions {
+        gap: 0.85rem;
+    }
+
+    .logo img {
+        height: 20px;
     }
 }
 
@@ -406,7 +417,7 @@ h4,
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
-    padding: 4rem 4%;
+    padding: 2.5rem 4%;
 }
 
 @media (min-width: 900px) {
@@ -423,7 +434,7 @@ h4,
 .promo-card {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--border);
+    border: 2px solid #fff;
     border-radius: calc(var(--radius) * 3);
     overflow: hidden;
     background: #fff;
@@ -459,6 +470,9 @@ h4,
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    background-color: #f9faf9;
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
+    flex-grow: 1;
 }
 
 .promo-card__label {
@@ -489,6 +503,48 @@ h4,
     margin-top: 0.75rem;
 }
 
+/* Brand Promo Box */
+.promo-brand-box {
+    background: #111;
+    border: 2px solid #fff;
+    border-radius: calc(var(--radius) * 3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 3rem;
+    width: 100%;
+    min-height: 380px;
+    gap: 1.5rem;
+}
+
+.promo-brand-logo {
+    height: 90px;
+    width: auto;
+    margin-bottom: 0.5rem;
+}
+
+.promo-brand-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    max-width: 280px;
+    margin: 0;
+}
+
+.promo-brand-btn {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+}
+
+.promo-brand-btn:hover {
+    background: #fff;
+    color: #111;
+}
+
 /* Brand Poster Section */
 .brand-posters {
     max-width: 1440px;
@@ -516,6 +572,7 @@ h4,
 .poster-item {
     position: relative;
     overflow: hidden;
+    border: 2px solid #fff;
     border-radius: calc(var(--radius) * 3);
     min-height: 280px;
     cursor: pointer;
@@ -579,6 +636,28 @@ h4,
     max-width: 1440px;
     margin: 0 auto;
     padding: 0 4% 4rem;
+}
+
+@media (max-width: 899px) {
+    .footer-main {
+        text-align: center;
+    }
+
+    .footer-brand {
+        align-items: center;
+    }
+
+    .footer-socials {
+        justify-content: center;
+    }
+
+    .footer-links-wrap {
+        grid-template-columns: 1fr;
+    }
+
+    .newsletter-form {
+        margin: 0 auto;
+    }
 }
 
 @media (min-width: 900px) {
@@ -766,6 +845,30 @@ h4,
     gap: 1rem;
 }
 
+@media (max-width: 899px) {
+    .scroll-gallery {
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 0.5rem;
+        margin: 0 -4%;
+        /* Expand to edges */
+        padding: 0 4%;
+        scrollbar-width: none;
+        /* Hide scrollbar Hide on Firefox */
+    }
+
+    .scroll-gallery::-webkit-scrollbar {
+        display: none;
+        /* Hide on Chrome/Safari */
+    }
+
+    .gallery-img {
+        flex: 0 0 85%;
+        scroll-snap-align: center;
+    }
+}
+
 .gallery-img {
     width: 100%;
     aspect-ratio: 1/1;
@@ -774,9 +877,16 @@ h4,
 }
 
 .product-meta {
-    position: sticky;
-    top: 2rem;
-    align-self: flex-start;
+    position: relative;
+    top: 0;
+}
+
+@media (min-width: 900px) {
+    .product-meta {
+        position: sticky;
+        top: 2rem;
+        align-self: flex-start;
+    }
 }
 
 .product-meta h1 {

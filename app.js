@@ -319,7 +319,7 @@ async function renderHome() {
             <div class="promo-left">
                 <div class="promo-card">
                     <div class="promo-card__image">
-                        <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&q=80&w=800" alt="Clothes Stack">
+                        <img src="assets/poster1.png" alt="Clothes Stack">
                     </div>
                     <div class="promo-card__text">
                         <span class="promo-card__label">New Arrivals</span>
@@ -330,16 +330,10 @@ async function renderHome() {
                 </div>
             </div>
             <div class="promo-right">
-                <div class="promo-card">
-                    <div class="promo-card__image">
-                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800" alt="Productivity Essentials">
-                    </div>
-                    <div class="promo-card__text">
-                        <span class="promo-card__label">Trending</span>
-                        <h3>Productivity Essentials</h3>
-                        <p>Objects that complement your digital tools so you can focus on what matters.</p>
-                        <a href="#/shop" class="btn btn-primary">Shop Now</a>
-                    </div>
+                <div class="promo-brand-box">
+                    <img src="assets/logo_white.png" alt="Flywear" class="promo-brand-logo">
+                    <p class="promo-brand-text">We bring you thoughtfully curated essentials — where premium quality meets everyday affordability.</p>
+                    <a href="#/contact" class="btn promo-brand-btn">About Us</a>
                 </div>
             </div>
         </section>
@@ -363,7 +357,7 @@ async function renderHome() {
                     </div>
                 </div>
                 <div class="poster-item">
-                    <img src="https://images.unsplash.com/photo-1434389678369-182f6f3ad78a?auto=format&fit=crop&q=80&w=800" alt="Accessories" loading="lazy">
+                    <img src="assets/poster2.png" alt="Accessories" loading="lazy">
                     <div class="poster-overlay">
                         <span class="poster-tag">Accessories</span>
                         <h3>Complete the Look</h3>
