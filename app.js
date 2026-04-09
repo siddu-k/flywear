@@ -341,14 +341,14 @@ async function renderHome() {
         <section class="brand-posters">
             <div class="poster-grid">
                 <div class="poster-item poster-item--tall">
-                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800" alt="Style" loading="lazy">
+                    <img src="assets/poster3.png" alt="Style" loading="lazy">
                     <div class="poster-overlay">
                         <span class="poster-tag">Style</span>
                         <h3>Wear the<br>Difference</h3>
                     </div>
                 </div>
                 <div class="poster-item">
-                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800" alt="Comfort" loading="lazy">
+                    <img src="assets/poster4.png" alt="Comfort" loading="lazy">
                     <div class="poster-overlay">
                         <span class="poster-tag">Comfort</span>
                         <h3>Everyday Ease</h3>
