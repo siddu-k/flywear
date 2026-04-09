@@ -331,7 +331,7 @@ async function renderHome() {
                 <div class="promo-brand-box">
                     <img src="assets/logo_white.png" alt="Flywear" class="promo-brand-logo">
                     <p class="promo-brand-text">We bring you thoughtfully curated essentials — where premium quality meets everyday affordability.</p>
-                    <a href="#/contact" class="btn promo-brand-btn">About Us</a>
+                    <a href="#/about" class="btn promo-brand-btn">About Us</a>
                 </div>
             </div>
         </section>
@@ -595,6 +595,9 @@ async function router() {
         } else if (hash === '#/shop') {
             document.querySelector('.nav-link[href="#/shop"]')?.classList.add('active');
             await renderShop();
+        } else if (hash === '#/about') {
+            document.querySelector('.nav-link[href="#/about"]')?.classList.add('active');
+            await renderAbout();
         } else if (hash.startsWith('#/category/')) {
             const cat = hash.split('#/category/')[1];
             await renderCategory(cat);
@@ -610,6 +613,75 @@ async function router() {
 
     window.scrollTo({ top: 0, behavior: 'auto' });
     isRouting = false;
+}
+
+// --- About Page Components ---
+async function renderAbout() {
+    appRoot.innerHTML = `
+        <div class="flywear-loader-screen is--loading is--hidden"></div> <!-- Placeholder for consistency -->
+        
+        <section class="hero hero--about" style="background: #f9f9f9; padding: 6rem 4%; text-align: center;">
+            <div class="container--narrow" style="max-width: 800px; margin: 0 auto;">
+                <span class="poster-tag" style="color: var(--sage); font-weight: 600; letter-spacing: 0.2em; display: block; margin-bottom: 1.5rem;">OUR STORY</span>
+                <h1 style="font-family: var(--font-display); font-size: 3.5rem; margin-bottom: 2rem;">The Flywear Standard</h1>
+                <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">
+                    Founded on the principle that premium quality shouldn't come with a luxury markup, Flywear was born to bridge the gap between high-end design and everyday accessibility.
+                </p>
+            </div>
+        </section>
+
+        <section class="section container">
+            <div class="split-promo" style="padding: 0;">
+                <div class="promo-left">
+                    <div class="promo-card">
+                        <div class="promo-card__image">
+                            <img src="assets/sitepage.png" alt="Flywear Lifestyle">
+                        </div>
+                    </div>
+                </div>
+                <div class="promo-right" style="display: flex; align-items: center; padding: 3rem;">
+                    <div>
+                        <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 1.5rem;">Curated Excellence</h2>
+                        <p style="margin-bottom: 1.5rem; color: #666; font-size: 1rem; line-height: 1.7;">
+                            Every piece in our collection is thoughtfully selected for its craftsmanship and durability. We believe your wardrobe should be an investment in confidence, not just clothing.
+                        </p>
+                        <p style="color: #666; font-size: 1rem; line-height: 1.7;">
+                            Our direct-to-consumer model allows us to cut out middleman costs, delivering the best value for item and shipping directly to you.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="background: #111; color: #fff; padding: 6rem 4%;">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 4rem; text-align: center;">
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem;">15-20 Days Delivery</h3>
+                        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.6;">
+                            We optimize our logistics to provide you the best possible cost for both item and shipping. Good things take a little time to arrive perfectly.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem;">Quality Replacement</h3>
+                        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.6;">
+                            Your trust is our priority. Damaged products can be replaced with video proof, ensuring you always receive the perfection you paid for.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem;">Global Support</h3>
+                        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.6;">
+                            Our team is here to support your journey. Questions about sizing or shipping? We're just a message away.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div style="text-align: center; padding: 6rem 0;">
+            <a href="#/shop" class="btn btn-primary">Start Your Collection</a>
+        </div>
+    `;
 }
 
 window.addEventListener('hashchange', router);
