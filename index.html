@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flywear Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Flywear Loading Animation -->
+    <section class="flywear-loader-screen is--loading is--hidden">
+        <div class="flywear-loader">
+            <div class="flywear-loader__h1">
+                <div class="flywear-loader__h1-start">
+                    <span class="flywear-loader__letter">F</span>
+                    <span class="flywear-loader__letter">L</span>
+                    <span class="flywear-loader__letter">Y</span>
+                </div>
+                <div class="flywear-loader__box">
+                    <div class="flywear-loader__box-inner">
+                        <div class="flywear-loader__growing-image">
+                            <div class="flywear-loader__growing-image-wrap">
+                                <img class="flywear-loader__cover-extra is--1"
+                                    src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600"
+                                    loading="eager" alt="">
+                                <img class="flywear-loader__cover-extra is--2"
+                                    src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600"
+                                    loading="eager" alt="">
+                                <img class="flywear-loader__cover-extra is--3"
+                                    src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600"
+                                    loading="eager" alt="">
+                                <img class="flywear-loader__cover-main" src="assets/sitepage.png" loading="eager"
+                                    alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flywear-loader__h1-end">
+                    <span class="flywear-loader__letter">W</span>
+                    <span class="flywear-loader__letter">E</span>
+                    <span class="flywear-loader__letter">A</span>
+                    <span class="flywear-loader__letter">R</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Announcement Bar -->
+    <div class="announcement-bar">
+        ✈ Free shipping on all orders · Delivery in 15–20 business days · Easy replacements with video proof · No order
+        cancellation
+    </div>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#/" class="logo">
+                <img src="assets/logo_white.png" alt="Logo Flywear">
+            </a>
+            <nav class="nav-links">
+                <a href="#/" class="nav-link">Home</a>
+                <a href="#/shop" class="nav-link">Catalog</a>
+                <a href="#/contact" class="nav-link">Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <button aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <a href="https://duskly-4.myshopify.com/account/login" target="_blank" aria-label="Account"
+                    style="display:flex;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+                <button class="cart-btn" id="cart-toggle" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                    </svg>
+                    <span id="cart-count">0</span>
+                </button>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav" id="mobile-nav">
+            <a href="#/" class="mobile-nav-link">Home</a>
+            <a href="#/shop" class="mobile-nav-link">Catalog</a>
+            <a href="#/contact" class="mobile-nav-link">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main id="app">
+        <!-- Dynamic content injected here -->
+        <div class="loader">Loading...</div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="footer-brand">
+                <a href="#/" class="footer-logo">
+                    <img src="assets/logo_white.png" alt="Flywear" style="height: 28px; width: auto;">
+                </a>
+                <p class="footer-tagline">Premium lifestyle essentials.<br>Curated for the modern you.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path
+                                d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                            </path>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links-wrap">
+                <div class="footer-links">
+                    <h4>Shop</h4>
+                    <a href="#/shop">All Products</a>
+                    <a href="#/shop">New Arrivals</a>
+                    <a href="#/shop">Best Sellers</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#/contact">Contact Us</a>
+                    <a href="#">Shipping Info</a>
+                    <a href="#">Returns</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="#">About Flywear</a>
+                    <a href="#">Our Story</a>
+                    <a href="#">Careers</a>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay in the Loop</h4>
+                <p>Subscribe for exclusive drops, offers & style tips.</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address" aria-label="Email">
+                    <button aria-label="Subscribe">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 FLYWEAR. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Refund Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Bag</h2>
+            <button class="close-cart" id="close-cart" aria-label="Close cart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p class="empty-state">Your bag is currently empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-subtotal">Rs. 0.00</span>
+            </div>
+            <button class="btn btn-primary checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Lightbox Overlay -->
+    <div id="lightbox-overlay" class="lightbox-overlay" onclick="window.closeLightbox()">
+        <button class="lightbox-close" onclick="window.closeLightbox()" aria-label="Close image">&times;</button>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Enlarged View">
+    </div>
+
+    <!-- GSAP for Loading Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+
+</html>
