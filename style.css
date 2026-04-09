@@ -99,6 +99,8 @@ h4,
     display: flex;
     align-items: center;
     z-index: 1000;
+    position: relative;
+    /* Added for mobile-nav anchoring */
 }
 
 .nav-container {
@@ -143,9 +145,27 @@ h4,
     }
 }
 
+.mobile-menu-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    order: 3;
+    /* Ensure it stays at the end */
+}
+
 @media (max-width: 899px) {
     .nav-actions {
         gap: 0.85rem;
+        order: 2;
+    }
+
+    .logo {
+        order: 1;
     }
 
     .logo img {
@@ -215,6 +235,7 @@ h4,
 
 .mobile-nav.open {
     max-height: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .mobile-nav-link {
