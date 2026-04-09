@@ -297,8 +297,6 @@ async function renderHome() {
     appRoot.innerHTML = `
         <section class="hero" style="width: 100%; height: auto; min-height: unset; display: block; margin: 0; padding: 0;">
             <picture style="width: 100%; display: block; margin: 0; padding: 0;">
-                <!-- The mobile banner file you will send -->
-                <source media="(max-width: 768px)" srcset="assets/banner2_mobile.png">
                 <!-- The desktop banner -->
                 <img src="assets/banner2.png" class="hero-bg" alt="Flywear Banner" style="width: 100%; height: auto; display: block; object-fit: contain;">
             </picture>
