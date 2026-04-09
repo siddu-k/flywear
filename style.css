@@ -1163,9 +1163,25 @@ h4,
     min-width: 1em;
     height: 100%;
     position: absolute;
+    background: #000;
+    /* Added black bg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.flywear-loader__cover-main,
+.flywear-loader__cover-main {
+    pointer-events: none;
+    object-fit: contain;
+    /* Changed from cover for logo */
+    user-select: none;
+    width: 80%;
+    /* Logo size */
+    height: 80%;
+    position: relative;
+    /* Relative for flex centering */
+}
+
 .flywear-loader__cover-extra {
     pointer-events: none;
     object-fit: cover;
