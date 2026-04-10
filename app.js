@@ -579,14 +579,12 @@ window.triggerBuyNow = () => {
 // --- Policy Popup Logic ---
 const policyOverlay = document.getElementById('policy-overlay');
 const policyCloseBtn = document.getElementById('policy-close');
-const policyAgreeCheck = document.getElementById('policy-agree-check');
 const policyContinueBtn = document.getElementById('policy-continue-btn');
 let pendingCheckoutUrl = '';
 
 function showPolicyPopup(url) {
     pendingCheckoutUrl = url;
-    policyAgreeCheck.checked = false;
-    policyContinueBtn.disabled = true;
+    policyContinueBtn.disabled = false;
     policyOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
@@ -605,12 +603,8 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && policyOverlay.classList.contains('active')) closePolicyPopup();
 });
 
-policyAgreeCheck.addEventListener('change', () => {
-    policyContinueBtn.disabled = !policyAgreeCheck.checked;
-});
-
 policyContinueBtn.addEventListener('click', () => {
-    if (pendingCheckoutUrl && policyAgreeCheck.checked) {
+    if (pendingCheckoutUrl) {
         window.location.href = pendingCheckoutUrl;
     }
 });
@@ -944,30 +938,14 @@ async function renderContact() {
                 </form>
             </div>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center; padding-top: 3rem; border-top: 1px solid var(--border);">
-                <div style="padding: 1rem;">
+            <div style="text-align: center; padding-top: 3rem; border-top: 1px solid var(--border);">
+                <div style="padding: 1rem; max-width: 300px; margin: 0 auto;">
                     <div style="font-size: 1.75rem; margin-bottom: 1rem; color: #111;">
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                     </div>
                     <h4 style="font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-display);">Email Support</h4>
-                    <a href="mailto:support@flywear.com" style="color: #666; text-decoration: none; font-size: 0.9rem;">support@flywear.com</a>
-                    <p style="color: #999; font-size: 0.75rem; margin-top: 0.25rem;">Usually replies in 24 hours</p>
-                </div>
-                <div style="padding: 1rem;">
-                    <div style="font-size: 1.75rem; margin-bottom: 1rem; color: #111;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                    </div>
-                    <h4 style="font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-display);">WhatsApp</h4>
-                    <p style="color: #666; font-size: 0.9rem;">+91 98765 43210</p>
-                    <p style="color: #999; font-size: 0.75rem; margin-top: 0.25rem;">Mon-Fri, 9AM-6PM IST</p>
-                </div>
-                <div style="padding: 1rem;">
-                    <div style="font-size: 1.75rem; margin-bottom: 1rem; color: #111;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    </div>
-                    <h4 style="font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-display);">Office Location</h4>
-                    <p style="color: #666; font-size: 0.9rem;">Bangalore, India</p>
-                    <p style="color: #999; font-size: 0.75rem; margin-top: 0.25rem;">HQ</p>
+                    <a href="mailto:FLYWEAR.IN@GMAIL.COM" style="color: #666; text-decoration: none; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">FLYWEAR.IN@GMAIL.COM</a>
+                    <p style="color: #999; font-size: 0.75rem; margin-top: 0.5rem;">Usually replies in 24 hours</p>
                 </div>
             </div>
         </section>
