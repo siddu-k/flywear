@@ -128,6 +128,7 @@ async function getFeaturedProducts(count = 8) {
                     node {
                         id title handle vendor availableForSale
                         priceRange { minVariantPrice { amount currencyCode } }
+                        compareAtPriceRange { maxVariantPrice { amount currencyCode } }
                         images(first: 1) { edges { node { url altText } } }
                     }
                 }
@@ -147,6 +148,7 @@ async function getAllProducts(first = 20, after = null) {
                     node {
                         id title handle vendor availableForSale 
                         priceRange { minVariantPrice { amount currencyCode } }
+                        compareAtPriceRange { maxVariantPrice { amount currencyCode } }
                         images(first: 1) { edges { node { url altText } } }
                     }
                 }
@@ -163,8 +165,9 @@ async function getProductByHandle(handle) {
             product(handle: $handle) {
                 id title descriptionHtml vendor availableForSale
                 priceRange { minVariantPrice { amount currencyCode } }
+                compareAtPriceRange { maxVariantPrice { amount currencyCode } }
                 images(first: 8) { edges { node { url altText } } }
-                variants(first: 40) { edges { node { id title availableForSale price { amount currencyCode } image { url } } } }
+                variants(first: 40) { edges { node { id title availableForSale price { amount currencyCode } compareAtPrice { amount currencyCode } image { url } } } }
             }
         }
     `;
@@ -244,7 +247,9 @@ checkoutBtn.addEventListener('click', () => {
         const idParts = item.variantId.split('/');
         return `${idParts[idParts.length - 1]}:${item.quantity}`;
     }).join(',');
-    window.location.href = `https://${STORE_DOMAIN}/cart/${cartString}`;
+    const checkoutUrl = `https://${STORE_DOMAIN}/cart/${cartString}`;
+    closeCart();
+    showPolicyPopup(checkoutUrl);
 });
 
 // --- UI Interactions ---
@@ -271,6 +276,8 @@ document.querySelectorAll('.mobile-nav-link').forEach(link => {
 // --- View Rendering ---
 function renderProductCard(product) {
     const price = product.priceRange.minVariantPrice.amount;
+    const comparePrice = product.compareAtPriceRange?.maxVariantPrice?.amount;
+    const isSale = comparePrice && parseFloat(comparePrice) > parseFloat(price);
     const image = product.images.edges[0]?.node?.url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600';
     // If not available, show Sold out badge. Force some to show Sold out if mimicking the layout.
     const isAvailable = product.availableForSale !== undefined ? product.availableForSale : true;
@@ -279,17 +286,21 @@ function renderProductCard(product) {
         <div class="product-card" onclick="window.location.hash='#/product/${product.handle}'">
             <div class="product-image-wrap">
                 <img src="${image}" alt="${product.title}" class="product-image" loading="lazy">
+                ${isSale ? '<span class="sale-badge" style="position:absolute; top:10px; right:10px; background:#d32f2f; color:#fff; padding:2px 8px; font-size:0.75rem; border-radius:4px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; z-index:2;">Sale</span>' : ''}
             </div>
             <div class="product-info">
                 <h3 class="product-title">${product.title}</h3>
-                <p class="product-price">Rs. ${formatPrice(price)}</p>
+                <div class="product-price">
+                    ${isSale ? `<span class="compare-price" style="text-decoration: line-through; color: #999; margin-right: 0.5rem; font-size: 0.85em;">Rs. ${formatPrice(comparePrice)}</span>` : ''}
+                    <span>Rs. ${formatPrice(price)}</span>
+                </div>
             </div>
         </div>
     `;
 }
 
 async function renderHome() {
-    appRoot.innerHTML = '<div class="loader">Loading...</div>';
+    appRoot.innerHTML = '<div class="loader loader--dark"><div class="loader-spinner"></div></div>';
 
     const products = await getFeaturedProducts(4); // Match 4 items in image grid
     let productsHtml = products.length > 0 ? products.map(renderProductCard).join('') : '';
@@ -302,6 +313,81 @@ async function renderHome() {
             </picture>
         </section>
 
+        <!-- Category Circles -->
+        <section class="section container">
+            <div class="category-circles">
+                <a href="#/category/fashion" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.38 3.46L16 2 12 5 8 2 3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+                        </svg>
+                    </div>
+                    <span>Fashion</span>
+                </a>
+                <a href="#/category/watches" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/>
+                            <path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"/>
+                        </svg>
+                    </div>
+                    <span>Watches</span>
+                </a>
+                <a href="#/category/kids" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/>
+                            <path d="M12 3v0"/><circle cx="9" cy="7.5" r="0.5" fill="currentColor"/><circle cx="15" cy="7.5" r="0.5" fill="currentColor"/>
+                            <path d="M9.5 10.5a3.5 3.5 0 0 0 5 0"/>
+                        </svg>
+                    </div>
+                    <span>Kids</span>
+                </a>
+                <a href="#/category/accessories" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 7h-4a2 2 0 0 0-2-2H10a2 2 0 0 0-2 2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                    </div>
+                    <span>Accessories</span>
+                </a>
+                <a href="#/category/shoes" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 18h20v1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1z"/>
+                            <path d="M2 18l1.2-7.2A2 2 0 0 1 5.17 9H6l1-5h3l.5 2 1.5.5L13 9h5.83a2 2 0 0 1 1.97 1.8L22 18"/>
+                        </svg>
+                    </div>
+                    <span>Shoes</span>
+                </a>
+                <a href="#/category/electronics" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                        </svg>
+                    </div>
+                    <span>Electronics</span>
+                </a>
+                <a href="#/category/daily life" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </div>
+                    <span>Daily Life</span>
+                </a>
+                <a href="#/category/kitchen" class="category-circle">
+                    <div class="category-circle__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
+                        </svg>
+                    </div>
+                    <span>Kitchen</span>
+                </a>
+            </div>
+        </section>
+
         <!-- Our Products -->
         <section class="section container">
             <div class="section-header">
@@ -309,6 +395,9 @@ async function renderHome() {
             </div>
             <div class="product-grid">
                 ${productsHtml || '<p class="empty-state">No products found.</p>'}
+            </div>
+            <div style="text-align: center; margin-top: 2.5rem;">
+                <a href="#/shop" class="btn btn-primary">Show More</a>
             </div>
         </section>
 
@@ -370,7 +459,7 @@ async function renderHome() {
 }
 
 async function renderShop() {
-    appRoot.innerHTML = '<div class="loader">Loading...</div>';
+    appRoot.innerHTML = '<div class="loader loader--dark"><div class="loader-spinner"></div></div>';
 
     const data = await getAllProducts(24);
     const products = data.edges.map(e => e.node);
@@ -390,7 +479,8 @@ async function renderShop() {
 }
 
 async function renderCategory(categoryId) {
-    appRoot.innerHTML = `<div class="loader">Loading...</div>`;
+    const decodedCategory = decodeURIComponent(categoryId);
+    appRoot.innerHTML = `<div class="loader loader--dark"><div class="loader-spinner"></div></div>`;
 
     const query = `
         query getProductsByQuery($query: String!) {
@@ -399,13 +489,14 @@ async function renderCategory(categoryId) {
                     node {
                         id title handle vendor availableForSale 
                         priceRange { minVariantPrice { amount currencyCode } }
+                        compareAtPriceRange { maxVariantPrice { amount currencyCode } }
                         images(first: 1) { edges { node { url altText } } }
                     }
                 }
             }
         }
     `;
-    const data = await shopifyFetch(query, { query: categoryId });
+    const data = await shopifyFetch(query, { query: decodedCategory });
     const products = data?.products?.edges.map(e => e.node) || [];
 
     let productsHtml = products.length > 0 ? products.map(renderProductCard).join('') : '<p class="empty-state">No items found.</p>';
@@ -413,7 +504,7 @@ async function renderCategory(categoryId) {
     appRoot.innerHTML = `
         <div class="container section">
             <div class="section-header">
-                <h1 class="section-title">${categoryId}</h1>
+                <h1 class="section-title">${decodedCategory}</h1>
             </div>
             <div class="product-grid">
                 ${productsHtml}
@@ -428,10 +519,15 @@ window.updateVariantState = (selectObj) => {
     const option = selectObj.options[selectObj.selectedIndex];
     if (!option.value) return;
     const price = option.getAttribute('data-price');
+    const comparePrice = option.getAttribute('data-compare-price');
     const available = option.getAttribute('data-available') === 'true';
     const variantImg = option.getAttribute('data-image');
 
-    document.getElementById('product-price-disp').innerText = 'Rs. ' + parseFloat(price).toFixed(2);
+    const priceHtml = (comparePrice && parseFloat(comparePrice) > parseFloat(price))
+        ? `<span class="compare-price" style="text-decoration: line-through; color: #999; margin-right: 0.5rem; font-size: 0.85em;">Rs. ${parseFloat(comparePrice).toFixed(2)}</span> Rs. ${parseFloat(price).toFixed(2)}`
+        : `Rs. ${parseFloat(price).toFixed(2)}`;
+
+    document.getElementById('product-price-disp').innerHTML = priceHtml;
 
     if (variantImg) {
         document.getElementById('main-product-image').src = variantImg;
@@ -449,7 +545,9 @@ window.updateVariantState = (selectObj) => {
     if (available) {
         addBtn.innerText = 'Add To Bag';
         addBtn.disabled = false;
+        addBtn.removeAttribute('data-needs-variant');
         buyBtn.disabled = false;
+        buyBtn.removeAttribute('data-needs-variant');
     } else {
         addBtn.innerText = 'Sold Out';
         addBtn.disabled = true;
@@ -459,14 +557,86 @@ window.updateVariantState = (selectObj) => {
 
 window.triggerAddToCart = (title, image) => {
     const btn = document.getElementById('add-to-bag-trigger');
+    if (btn.hasAttribute('data-needs-variant')) { highlightVariantSelect(); return; }
     const overrideImage = btn.getAttribute('data-image') || image;
     addToCart(btn.getAttribute('data-variant'), title, btn.getAttribute('data-price'), overrideImage, parseInt(document.getElementById('qty-input').value) || 1);
 };
 
 window.triggerBuyNow = () => {
-    const rawId = document.getElementById('buy-now-trigger').getAttribute('data-variant').split('/').pop();
-    window.location.href = `https://${STORE_DOMAIN}/cart/${rawId}:${parseInt(document.getElementById('qty-input').value) || 1}`;
+    const btn = document.getElementById('buy-now-trigger');
+    if (btn.hasAttribute('data-needs-variant')) { highlightVariantSelect(); return; }
+    const rawId = btn.getAttribute('data-variant').split('/').pop();
+    const checkoutUrl = `https://${STORE_DOMAIN}/cart/${rawId}:${parseInt(document.getElementById('qty-input').value) || 1}`;
+    showPolicyPopup(checkoutUrl);
 };
+
+// --- Policy Popup Logic ---
+const policyOverlay = document.getElementById('policy-overlay');
+const policyCloseBtn = document.getElementById('policy-close');
+const policyAgreeCheck = document.getElementById('policy-agree-check');
+const policyContinueBtn = document.getElementById('policy-continue-btn');
+let pendingCheckoutUrl = '';
+
+function showPolicyPopup(url) {
+    pendingCheckoutUrl = url;
+    policyAgreeCheck.checked = false;
+    policyContinueBtn.disabled = true;
+    policyOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePolicyPopup() {
+    policyOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+    pendingCheckoutUrl = '';
+}
+
+policyCloseBtn.addEventListener('click', closePolicyPopup);
+policyOverlay.addEventListener('click', (e) => {
+    if (e.target === policyOverlay) closePolicyPopup();
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && policyOverlay.classList.contains('active')) closePolicyPopup();
+});
+
+policyAgreeCheck.addEventListener('change', () => {
+    policyContinueBtn.disabled = !policyAgreeCheck.checked;
+});
+
+policyContinueBtn.addEventListener('click', () => {
+    if (pendingCheckoutUrl && policyAgreeCheck.checked) {
+        window.location.href = pendingCheckoutUrl;
+    }
+});
+
+// Highlight variant select when user tries to buy without selecting
+function highlightVariantSelect() {
+    const select = document.getElementById('variant-select');
+    if (!select) return;
+
+    // Scroll into view
+    select.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // Add highlight class
+    select.classList.add('variant-highlight');
+
+    // Show tooltip message
+    let tooltip = document.getElementById('variant-tooltip');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'variant-tooltip';
+        tooltip.className = 'variant-tooltip';
+        tooltip.textContent = '⚠ Please select an option first';
+        select.parentElement.appendChild(tooltip);
+    }
+    tooltip.classList.add('active');
+
+    // Remove after animation
+    setTimeout(() => {
+        select.classList.remove('variant-highlight');
+        tooltip.classList.remove('active');
+    }, 2500);
+}
 
 window.openLightbox = (url) => {
     document.getElementById('lightbox-img').src = url;
@@ -477,7 +647,7 @@ window.closeLightbox = () => {
 };
 
 async function renderProductDetail(handle) {
-    appRoot.innerHTML = '<div class="loader">Loading...</div>';
+    appRoot.innerHTML = '<div class="loader loader--dark"><div class="loader-spinner"></div></div>';
 
     const product = await getProductByHandle(handle);
     if (!product) {
@@ -487,6 +657,11 @@ async function renderProductDetail(handle) {
 
     const firstVariant = product.variants.edges[0]?.node;
     const price = firstVariant?.price?.amount || product.priceRange.minVariantPrice.amount;
+    const defaultComparePrice = firstVariant?.compareAtPrice?.amount || product.compareAtPriceRange?.maxVariantPrice?.amount;
+
+    const priceHtml = (defaultComparePrice && parseFloat(defaultComparePrice) > parseFloat(price))
+        ? `<span class="compare-price" style="text-decoration: line-through; color: #999; margin-right: 0.5rem; font-size: 0.85em;">Rs. ${formatPrice(defaultComparePrice)}</span> Rs. ${formatPrice(price)}`
+        : `Rs. ${formatPrice(price)}`;
 
     const variants = product.variants.edges.map(e => e.node);
     const showVariants = variants.length > 1 && variants[0].title !== 'Default Title';
@@ -498,7 +673,7 @@ async function renderProductDetail(handle) {
                 <label for="variant-select" style="font-weight: 500; font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">Select Option</label>
                 <select id="variant-select" onchange="window.updateVariantState(this)" style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 5px; font-family: var(--font-sans); background: #fff;">
                     <option value="" disabled selected>Select an Item</option>
-                    ${variants.map(v => `<option value="${v.id}" data-price="${v.price.amount}" data-available="${v.availableForSale}" data-image="${v.image ? v.image.url : ''}">${v.title}</option>`).join('')}
+                    ${variants.map(v => `<option value="${v.id}" data-price="${v.price.amount}" data-compare-price="${v.compareAtPrice?.amount || ''}" data-available="${v.availableForSale}" data-image="${v.image ? v.image.url : ''}">${v.title}</option>`).join('')}
                 </select>
             </div>
         `;
@@ -547,7 +722,7 @@ async function renderProductDetail(handle) {
             </div>
             <div class="product-meta">
                 <h1>${product.title}</h1>
-                <p class="price" id="product-price-disp">Rs. ${formatPrice(price)}</p>
+                <p class="price" id="product-price-disp">${priceHtml}</p>
                 
                 <div class="add-to-cart-form" style="margin-bottom: 3rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
                     ${variantHtml}
@@ -555,12 +730,25 @@ async function renderProductDetail(handle) {
                         <label for="qty-input" style="font-weight: 500; font-size: 0.85rem; margin-right: 0.5rem; align-self: center;">Quantity</label>
                         <input type="number" id="qty-input" class="quantity-input" value="1" min="1">
                     </div>
-                    <button id="add-to-bag-trigger" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;" data-variant="${firstVariant?.id}" data-price="${price}" onclick="window.triggerAddToCart('${product.title.replace(/'/g, "\\'")}', '${primaryImage}')" ${showVariants || !firstVariant?.availableForSale ? 'disabled' : ''}>
+                    <button id="add-to-bag-trigger" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;" data-variant="${firstVariant?.id}" data-price="${price}" onclick="window.triggerAddToCart('${product.title.replace(/'/g, "\\'")}', '${primaryImage}')" ${!showVariants && !firstVariant?.availableForSale ? 'disabled' : ''} ${showVariants ? 'data-needs-variant="true"' : ''}>
                         ${showVariants ? 'Select an Item' : (firstVariant?.availableForSale ? 'Add To Bag' : 'Sold Out')}
                     </button>
-                    <button id="buy-now-trigger" class="btn btn-outline" style="width: 100%; border-color:#000; color:#000;" data-variant="${firstVariant?.id}" onclick="window.triggerBuyNow()" ${showVariants || !firstVariant?.availableForSale ? 'disabled' : ''}>
+                    <button id="buy-now-trigger" class="btn btn-outline" style="width: 100%; border-color:#000; color:#000;" data-variant="${firstVariant?.id}" onclick="window.triggerBuyNow()" ${!showVariants && !firstVariant?.availableForSale ? 'disabled' : ''} ${showVariants ? 'data-needs-variant="true"' : ''}>
                         Buy Now
                     </button>
+                    
+                    <div class="secure-payments" style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed var(--border); text-align: center;">
+                        <p style="font-size: 0.75rem; color: #555; margin-bottom: 0.5rem; font-weight: 500;">Guaranteed Safe & Secure Checkout</p>
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                            <span style="font-size:0.7rem; background:#f5f5f5; border:1px solid #e5e5e5; padding:0.25rem 0.5rem; border-radius:4px; color:#555; font-weight:700;">UPI</span>
+                            <span style="font-size:0.7rem; background:#f5f5f5; border:1px solid #e5e5e5; padding:0.25rem 0.5rem; border-radius:4px; color:#555; font-weight:700;">PhonePe</span>
+                            <span style="font-size:0.7rem; background:#f5f5f5; border:1px solid #e5e5e5; padding:0.25rem 0.5rem; border-radius:4px; color:#555; font-weight:700;">Netbanking</span>
+                            <span style="font-size:0.7rem; background:#f5f5f5; border:1px solid #e5e5e5; padding:0.25rem 0.5rem; border-radius:4px; color:#555; display:flex; align-items:center; gap:0.25rem;">
+                                <svg width="16" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                                <span style="font-weight:700;">Cards</span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="product-description">
@@ -570,7 +758,20 @@ async function renderProductDetail(handle) {
             
             ${bottomImagesHtml}
         </div>
+
+        <!-- You May Also Like -->
+        <section class="section container" id="recommended-products">
+            <div class="section-header">
+                <h2 class="section-title">You May Also Like</h2>
+            </div>
+            <div class="product-grid" id="recommended-grid">
+                <div class="loader loader--dark" style="min-height:20vh;"><div class="loader-spinner"></div></div>
+            </div>
+        </section>
     `;
+
+    // Load recommended products
+    loadRecommendedProducts();
 }
 
 window.handleBuyNow = (variantId) => {
@@ -578,6 +779,21 @@ window.handleBuyNow = (variantId) => {
     const rawId = idParts[idParts.length - 1];
     window.location.href = `https://${STORE_DOMAIN}/cart/${rawId}:1`;
 };
+
+async function loadRecommendedProducts() {
+    try {
+        const products = await getFeaturedProducts(4);
+        const grid = document.getElementById('recommended-grid');
+        if (!grid) return;
+        if (products.length > 0) {
+            grid.innerHTML = products.map(renderProductCard).join('');
+        } else {
+            grid.innerHTML = '<p class="empty-state">No recommendations found.</p>';
+        }
+    } catch (err) {
+        console.error('Failed to load recommendations:', err);
+    }
+}
 
 // --- Router ---
 let isRouting = false;
@@ -598,6 +814,9 @@ async function router() {
         } else if (hash === '#/about') {
             document.querySelector('.nav-link[href="#/about"]')?.classList.add('active');
             await renderAbout();
+        } else if (hash === '#/contact') {
+            document.querySelector('.nav-link[href="#/contact"]')?.classList.add('active');
+            await renderContact();
         } else if (hash.startsWith('#/category/')) {
             const cat = hash.split('#/category/')[1];
             await renderCategory(cat);
@@ -631,13 +850,9 @@ async function renderAbout() {
         </section>
 
         <section class="section container">
-            <div class="split-promo" style="padding: 0;">
-                <div class="promo-left">
-                    <div class="promo-card">
-                        <div class="promo-card__image">
-                            <img src="assets/sitepage.png" alt="Flywear Lifestyle">
-                        </div>
-                    </div>
+            <div class="split-promo" style="padding: 0; min-height: 50vh;">
+                <div class="promo-left" style="display: flex; align-items: stretch; padding: 2rem;">
+                    <img src="assets/sitepage.png" alt="Flywear Lifestyle" style="width: 100%; height: 100%; object-fit: cover; border-radius: calc(var(--radius) * 3); box-shadow: 0 15px 40px rgba(0,0,0,0.06);">
                 </div>
                 <div class="promo-right" style="display: flex; align-items: center; padding: 3rem;">
                     <div>
@@ -683,6 +898,199 @@ async function renderAbout() {
         </div>
     `;
 }
+
+// --- Contact Page Component ---
+async function renderContact() {
+    appRoot.innerHTML = `
+        <div class="flywear-loader-screen is--loading is--hidden"></div>
+        
+        <section class="section container" style="padding-top: 6rem; padding-bottom: 6rem; max-width: 800px;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h1 style="font-family: var(--font-display); font-size: 3rem; margin-bottom: 1rem;">Get in Touch</h1>
+                <p style="color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">We'd love to hear from you. Reach out to us for any questions about your order, sizing, or our products.</p>
+            </div>
+            
+            <div style="background: #fff; padding: 3rem; border-radius: calc(var(--radius) * 3); border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.03); margin-bottom: 4rem;">
+                <form id="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully! We will get back to you soon.'); this.reset();" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #111;">First Name</label>
+                            <input type="text" required placeholder="John" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius); font-family: inherit; font-size: 0.95rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #111;">Last Name</label>
+                            <input type="text" required placeholder="Doe" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius); font-family: inherit; font-size: 0.95rem;">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #111;">Email Address</label>
+                        <input type="email" required placeholder="john@example.com" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius); font-family: inherit; font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #111;">Order Number (Optional)</label>
+                        <input type="text" placeholder="#102934" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius); font-family: inherit; font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #111;">Message</label>
+                        <textarea required rows="5" placeholder="How can we help you?" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius); font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="align-self: flex-start; padding: 1rem 3rem; margin-top: 0.5rem;">Send Message</button>
+                </form>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center; padding-top: 3rem; border-top: 1px solid var(--border);">
+                <div style="padding: 1rem;">
+                    <div style="font-size: 1.75rem; margin-bottom: 1rem; color: #111;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </div>
+                    <h4 style="font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-display);">Email Support</h4>
+                    <a href="mailto:support@flywear.com" style="color: #666; text-decoration: none; font-size: 0.9rem;">support@flywear.com</a>
+                    <p style="color: #999; font-size: 0.75rem; margin-top: 0.25rem;">Usually replies in 24 hours</p>
+                </div>
+                <div style="padding: 1rem;">
+                    <div style="font-size: 1.75rem; margin-bottom: 1rem; color: #111;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </div>
+                    <h4 style="font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-display);">WhatsApp</h4>
+                    <p style="color: #666; font-size: 0.9rem;">+91 98765 43210</p>
+                    <p style="color: #999; font-size: 0.75rem; margin-top: 0.25rem;">Mon-Fri, 9AM-6PM IST</p>
+                </div>
+                <div style="padding: 1rem;">
+                    <div style="font-size: 1.75rem; margin-bottom: 1rem; color: #111;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    </div>
+                    <h4 style="font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-display);">Office Location</h4>
+                    <p style="color: #666; font-size: 0.9rem;">Bangalore, India</p>
+                    <p style="color: #999; font-size: 0.75rem; margin-top: 0.25rem;">HQ</p>
+                </div>
+            </div>
+        </section>
+    `;
+}
+
+// --- Search Functionality ---
+const searchToggleBtn = document.getElementById('search-toggle');
+const searchOverlay = document.getElementById('search-overlay');
+const searchCloseBtn = document.getElementById('search-close');
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+const searchSpinner = document.getElementById('search-spinner');
+
+let searchDebounceTimer = null;
+
+function openSearch() {
+    searchOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => searchInput.focus(), 300);
+}
+
+function closeSearch() {
+    searchOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+}
+
+searchToggleBtn.addEventListener('click', openSearch);
+searchCloseBtn.addEventListener('click', closeSearch);
+
+// Close on clicking outside content
+searchOverlay.addEventListener('click', (e) => {
+    if (e.target === searchOverlay) closeSearch();
+});
+
+// Close on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
+        closeSearch();
+    }
+});
+
+async function searchProducts(term) {
+    const query = `
+        query searchProducts($query: String!) {
+            products(first: 12, query: $query) {
+                edges {
+                    node {
+                        id title handle vendor availableForSale
+                        priceRange { minVariantPrice { amount currencyCode } }
+                        compareAtPriceRange { maxVariantPrice { amount currencyCode } }
+                        images(first: 1) { edges { node { url altText } } }
+                    }
+                }
+            }
+        }
+    `;
+    const data = await shopifyFetch(query, { query: term });
+    return data?.products?.edges.map(e => e.node) || [];
+}
+
+function renderSearchResults(products) {
+    if (products.length === 0) {
+        searchResults.innerHTML = `
+            <div class="search-empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <p>No products found. Try a different search term.</p>
+            </div>
+        `;
+        return;
+    }
+
+    searchResults.innerHTML = products.map(product => {
+        const image = product.images.edges[0]?.node?.url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600';
+        const price = product.priceRange.minVariantPrice.amount;
+        const comparePrice = product.compareAtPriceRange?.maxVariantPrice?.amount;
+        const isSale = comparePrice && parseFloat(comparePrice) > parseFloat(price);
+
+        return `
+            <div class="search-result-card" onclick="window.location.hash='#/product/${product.handle}'; closeSearch();">
+                <div class="search-result-card__image">
+                    <img src="${image}" alt="${product.title}" loading="lazy">
+                </div>
+                <div class="search-result-card__info">
+                    <div class="search-result-card__title">${product.title}</div>
+                    <div class="search-result-card__price">
+                        ${isSale ? `<span class="compare-price" style="text-decoration: line-through; color: #999; margin-right: 0.5rem; font-size: 0.85em;">Rs. ${formatPrice(comparePrice)}</span>` : ''}
+                        <span>Rs. ${formatPrice(price)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Make closeSearch available globally for inline onclick
+window.closeSearch = closeSearch;
+
+searchInput.addEventListener('input', () => {
+    clearTimeout(searchDebounceTimer);
+    const term = searchInput.value.trim();
+
+    if (term.length === 0) {
+        searchResults.innerHTML = '';
+        searchSpinner.classList.remove('active');
+        return;
+    }
+
+    if (term.length < 2) return;
+
+    searchSpinner.classList.add('active');
+
+    searchDebounceTimer = setTimeout(async () => {
+        try {
+            const products = await searchProducts(term);
+            renderSearchResults(products);
+        } catch (err) {
+            console.error('Search error:', err);
+            searchResults.innerHTML = '<div class="search-empty-state"><p>Something went wrong. Please try again.</p></div>';
+        } finally {
+            searchSpinner.classList.remove('active');
+        }
+    }, 400);
+});
 
 window.addEventListener('hashchange', router);
 window.addEventListener('load', router);

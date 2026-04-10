@@ -65,7 +65,7 @@
                 <a href="#/contact" class="nav-link">Contact</a>
             </nav>
             <div class="nav-actions">
-                <button aria-label="Search">
+                <button id="search-toggle" aria-label="Search">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -110,7 +110,9 @@
     <!-- Main Content Container -->
     <main id="app">
         <!-- Dynamic content injected here -->
-        <div class="loader">Loading...</div>
+        <div class="loader loader--dark">
+            <div class="loader-spinner"></div>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -191,6 +193,32 @@
         </div>
     </footer>
 
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="search-overlay">
+        <div class="search-overlay__inner">
+            <button class="search-overlay__close" id="search-close" aria-label="Close search">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="search-overlay__content">
+                <h2 class="search-overlay__title">Search</h2>
+                <div class="search-overlay__input-wrap">
+                    <svg class="search-overlay__icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="search-input" class="search-overlay__input" placeholder="Search products..."
+                        autocomplete="off">
+                    <div class="search-overlay__spinner" id="search-spinner"></div>
+                </div>
+                <div class="search-overlay__results" id="search-results"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Cart Sidebar -->
     <div class="cart-overlay" id="cart-overlay"></div>
     <div class="cart-sidebar" id="cart-sidebar">
@@ -212,6 +240,72 @@
                 <span id="cart-subtotal">Rs. 0.00</span>
             </div>
             <button class="btn btn-primary checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Policy Popup -->
+    <div class="policy-overlay" id="policy-overlay">
+        <div class="policy-modal">
+            <button class="policy-modal__close" id="policy-close" aria-label="Close policy">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="policy-modal__icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <h2 class="policy-modal__title">Order Cancellation & Return Policy</h2>
+
+            <div class="policy-modal__content">
+                <div class="policy-section">
+                    <h4>Order Cancellation</h4>
+                    <ul>
+                        <li>Orders can be cancelled within <strong>2–4 hours</strong> of placing the order or before
+                            dispatch.</li>
+                        <li>Once the order is shipped, cancellation is <strong>not possible</strong>.</li>
+                    </ul>
+                </div>
+                <div class="policy-section">
+                    <h4>Delivery Time</h4>
+                    <ul>
+                        <li>Orders are typically delivered within <strong>8–30 business days</strong>, depending on your
+                            location.</li>
+                        <li>We strive to deliver your order as quickly as possible.</li>
+                    </ul>
+                </div>
+                <div class="policy-section">
+                    <h4>Returns</h4>
+                    <ul>
+                        <li>We offer returns only in case of <strong>damaged, defective, or wrong products</strong>.
+                        </li>
+                        <li>You must report the issue within <strong>48 hours of delivery</strong> with proof
+                            (photos/video).</li>
+                        <li>No returns will be accepted for any other reasons.</li>
+                    </ul>
+                </div>
+                <div class="policy-section policy-section--warning">
+                    <h4>⚠ Important</h4>
+                    <ul>
+                        <li>Please record an <strong>unboxing video</strong> for any damage claims.</li>
+                        <li>By placing an order, you agree to the above terms.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <label class="policy-modal__agree" for="policy-agree-check">
+                <input type="checkbox" id="policy-agree-check">
+                <span>I have read and agree to the above policy</span>
+            </label>
+            <button class="btn btn-primary policy-modal__continue" id="policy-continue-btn" disabled>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    style="margin-right:0.5rem;">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Continue to Payment
+            </button>
         </div>
     </div>
 
