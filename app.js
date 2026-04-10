@@ -75,7 +75,13 @@ function initFlywearLoader() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initFlywearLoader();
+    const hash = window.location.hash;
+    if (hash.startsWith('#/product/')) {
+        const screen = document.querySelector('.flywear-loader-screen');
+        if (screen) screen.remove();
+    } else {
+        initFlywearLoader();
+    }
 });
 
 // --- State Management ---
